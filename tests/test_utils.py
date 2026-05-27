@@ -1,14 +1,7 @@
 from unittest.mock import patch
 
-from src.utils import (
-    currency_rate,
-    stock_price,
-    read_file,
-    expenses_operations,
-    expenses_categories,
-    income_operations,
-    income_categories,
-)
+from src.utils import (currency_rate, expenses_categories, expenses_operations, income_categories, income_operations,
+                       read_file, stock_price)
 
 
 @patch("requests.get")

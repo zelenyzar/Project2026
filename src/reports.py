@@ -1,10 +1,7 @@
-import functools
 import os
 from datetime import datetime
 
 import pandas as pd
-
-from src.utils import read_file
 
 
 def expenses_category_output(file_name="expenses_category.xlsx"):
@@ -53,6 +50,3 @@ def expenses_category(transactions, category, some_date=None):
     trans_category = expenses[expenses["Категория"] == category]
 
     return trans_category
-
-
-

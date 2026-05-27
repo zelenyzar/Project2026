@@ -1,6 +1,4 @@
-import http.client
 import os
-import time
 
 import finnhub
 import pandas as pd

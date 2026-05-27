@@ -4,16 +4,8 @@ from datetime import datetime
 
 import pandas as pd
 
-
-from src.utils import (
-    read_file,
-    expenses_operations,
-    expenses_categories,
-    income_operations,
-    income_categories,
-    currency_rate,
-    stock_price,
-)
+from src.utils import (currency_rate, expenses_categories, expenses_operations, income_categories, income_operations,
+                       read_file, stock_price)
 
 
 def sorted_operation(end_date, start_date=None):
@@ -69,6 +61,3 @@ def sorted_operation(end_date, start_date=None):
     }
 
     return operation_sort
-
-
-
