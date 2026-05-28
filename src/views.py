@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 from datetime import datetime
 
@@ -7,16 +8,29 @@ import pandas as pd
 from src.utils import (currency_rate, expenses_categories, expenses_operations, income_categories, income_operations,
                        read_file, stock_price)
 
+logger = logging.getLogger("views")
+logger.setLevel(logging.DEBUG)
+console_handler = logging.FileHandler("logs/views.log", mode="w", encoding="utf-8")
+console_formatter = logging.Formatter("%(asctime)s %(levelname)s %(name)s %(lineno)d: %(message)s")
+console_handler.setFormatter(console_formatter)
+logger.addHandler(console_handler)
+
 
 def sorted_operation(end_date, start_date=None):
     """Функция, которая сортирует операции в указанном диапазоне дат"""
-    calendar = datetime.strptime(end_date, "%d.%m.%Y")
-    if start_date is None:
-        start_date = datetime(calendar.year, calendar.month, 1)
-    else:
-        start_date = datetime.strptime(end_date, "%d.%m.%Y")
+    try:
+        calendar = datetime.strptime(end_date, "%d.%m.%Y")
+        if start_date is None:
+            start_date = datetime(calendar.year, calendar.month, 1)
+        else:
+            start_date = datetime.strptime(end_date, "%d.%m.%Y")
+        logger.debug("Начальная дата определена")
+    except ValueError:
+        logger.error("Неверный формат даты")
+        return "Неверный формат даты"
 
     operations = read_file()
+    logger.info("Файл считан")
     operations["Дата платежа"] = pd.to_datetime(operations["Дата платежа"], dayfirst=True)
     operation_date_range = operations.loc[start_date <= operations["Дата платежа"]].loc[
         operations["Дата платежа"] <= calendar
@@ -59,5 +73,5 @@ def sorted_operation(end_date, start_date=None):
         "currency_rates": currency_rate(currency_given),
         "stock_prices": stock_price(stock_list),
     }
-
+    logger.debug("Сортировка операций в указанном диапазоне успешно завершена")
     return operation_sort

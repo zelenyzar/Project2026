@@ -10,3 +10,4 @@ def test_sorted_operation(mock_price, mock_currency, operation_2, operation_3, o
     mock_currency.return_value = operation_2
     assert sorted_operation("20.12.2021") == operation_1
     assert sorted_operation("20.12.2021", "10.12.2021") == operation_4
+    assert sorted_operation("1023.514.120") == "Неверный формат даты"
