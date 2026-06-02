@@ -1,14 +1,21 @@
 from unittest.mock import patch
 
-from src.utils import (currency_rate, expenses_categories, expenses_operations, income_categories, income_operations,
-                       read_file, stock_price)
+from src.utils import (
+    currency_rate,
+    expenses_categories,
+    expenses_operations,
+    income_categories,
+    income_operations,
+    read_file,
+    stock_price,
+)
 
 
 @patch("requests.get")
 def test_currency_rate(mock_response, test_api_currency, test_api_currency_1):
     """Тест апи по валютам"""
     mock_response.return_value.json.return_value = test_api_currency
-    assert currency_rate("Eur") == test_api_currency_1
+    assert currency_rate("EUR") == test_api_currency_1
 
 
 @patch("finnhub.Client")

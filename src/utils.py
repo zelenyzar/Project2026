@@ -12,24 +12,30 @@ API_KEY = os.environ.get("API_KEY")
 
 def currency_rate(currency_given):
     """Функция определения курса валют"""
-    amount_given = "RUB"
-    url = f"https://api.apilayer.com/exchangerates_data/latest?symbols={currency_given}&base={amount_given}"
-    payload = {}
-    headers = {"apikey": os.getenv("API_KEY")}
-    response = requests.get(url, headers=headers, data=payload)
-    currency_result = []
-    for k, value in response.json().get("rates").items():
-        currency_result.append({"currency": k, "rate": round(1 / value, 2)})
-    return currency_result
+    try:
+        amount_given = "RUB"
+        url = f"https://api.apilayer.com/exchangerates_data/latest?symbols={currency_given}&base={amount_given}"
+        payload = {}
+        headers = {"apikey": os.getenv("API_KEY")}
+        response = requests.get(url, headers=headers, data=payload)
+        currency_result = []
+        for k, value in response.json().get("rates").items():
+            currency_result.append({"currency": k, "rate": round(1 / value, 2)})
+        return currency_result
+    except Exception as e:
+        return f"Ошибка: {e}"
 
 
 def stock_price(stock_list):
-    finnhub_client = finnhub.Client(api_key=os.getenv("API_KEY_2"))
-    stocky = []
-    for stock in stock_list:
-        quote = finnhub_client.quote(stock)
-        stocky.append({"stock": stock, "price": quote["c"]})
-    return stocky
+    try:
+        finnhub_client = finnhub.Client(api_key=os.getenv("API_KEY_2"))
+        stocky = []
+        for stock in stock_list:
+            quote = finnhub_client.quote(stock)
+            stocky.append({"stock": stock, "price": quote["c"]})
+        return stocky
+    except Exception as e:
+        return f"Ошибка: {e}"
 
 
 def read_file():
@@ -50,7 +56,7 @@ def expenses_categories(transaction):
     """Функция группировки по категориям"""
     transaction_expenses = transaction[transaction["Сумма операции"] < 0]
     transaction_group = round(transaction_expenses.groupby("Категория")["Сумма операции"].sum().abs(), 2)
-    head_expenses = transaction_group.head(7)
+    head_expenses = transaction_group.sort_values(ascending=False).head(7)
     other_expenses = round(transaction_group.iloc[7:].sum(), 2)
     cash = round(transaction_expenses[transaction_expenses["Категория"] == "Наличные"]["Сумма операции"].sum(), 2) * -1
     wire_transfers = (

@@ -5,8 +5,15 @@ from datetime import datetime
 
 import pandas as pd
 
-from src.utils import (currency_rate, expenses_categories, expenses_operations, income_categories, income_operations,
-                       read_file, stock_price)
+from src.utils import (
+    currency_rate,
+    expenses_categories,
+    expenses_operations,
+    income_categories,
+    income_operations,
+    read_file,
+    stock_price,
+)
 
 logger = logging.getLogger("views")
 logger.setLevel(logging.DEBUG)
@@ -21,9 +28,9 @@ def sorted_operation(end_date, start_date=None):
     try:
         calendar = datetime.strptime(end_date, "%d.%m.%Y")
         if start_date is None:
-            start_date = datetime(calendar.year, calendar.month, 1)
+            start_date_new = datetime(calendar.year, calendar.month, 1)
         else:
-            start_date = datetime.strptime(end_date, "%d.%m.%Y")
+            start_date_new = datetime.strptime(start_date, "%d.%m.%Y")
         logger.debug("Начальная дата определена")
     except ValueError:
         logger.error("Неверный формат даты")
@@ -32,10 +39,10 @@ def sorted_operation(end_date, start_date=None):
     operations = read_file()
     logger.info("Файл считан")
     operations["Дата платежа"] = pd.to_datetime(operations["Дата платежа"], dayfirst=True)
-    operation_date_range = operations.loc[start_date <= operations["Дата платежа"]].loc[
+    operation_date_range = operations.loc[start_date_new <= operations["Дата платежа"]].loc[
         operations["Дата платежа"] <= calendar
     ]
-
+    print(f"даты, используемые для фильтрации (для наставника): {calendar} - {start_date_new}")
     path = os.path.join(os.path.dirname(__file__), "..", "data", "user_settings.json")
     with open(path, "r", encoding="utf-8") as f:
         json_file = json.load(f)

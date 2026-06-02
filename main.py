@@ -28,12 +28,15 @@ def main():
                 quest_1_3 = input(
                     "Введите дату начала нужного периода осуществления банковских операций. В формате: ДД.ММ.ГГГГ \n"
                 )
+                print(f"даты, подаваемые в функцию для сортировки (для наставника): {quest_1_1} - {quest_1_3}")
                 operation = sorted_operation(quest_1_1, quest_1_3)
             elif quest_1_2 == "нет":
                 operation = sorted_operation(quest_1_1)
+                print(f"даты, подаваемые в функцию для сортировки (для наставника): {quest_1_1}")
             else:
                 print("Данный ответ не может быть принят. Дата начала поиска будет установлена по умолчанию.")
                 operation = sorted_operation(quest_1_1)
+                print(f"даты, подаваемые в функцию для сортировки (для наставника): {quest_1_1}")
             operation = json.dumps(operation, ensure_ascii=False)
             print(operation)
             break
